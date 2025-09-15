@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Page Generator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: 70vh;
+        }
+
+        .form-section {
+            padding: 40px;
+            background: #f8f9fa;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+
+        .preview-section {
+            padding: 40px;
+            background: white;
+            border-left: 1px solid #e9ecef;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .field-help {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 8px;
+            font-weight: normal;
+            text-transform: none;
+            letter-spacing: normal;
+            font-style: italic;
+        }
+
+        .section-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 20px;
+            margin: 30px -40px 25px -40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-description {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 12px 15px;
+            margin: -15px -40px 25px -40px;
+            font-style: italic;
+            color: #1565c0;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .preview-area {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            color: #6c757d;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .preview-area.has-content {
+            background: white;
+            border: 1px solid #dee2e6;
+            text-align: left;
+            align-items: flex-start;
+        }
+
+        .download-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        .preview-content {
+            width: 100%;
+            max-height: 500px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+        }
+
+        .preview-content pre {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .preview-section {
+                border-left: none;
+                border-top: 1px solid #e9ecef;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-section,
+            .preview-section {
+                padding: 20px;
+            }
+        }
+
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>HTML Page Generator</h1>
+            <p>Fill in the form to generate your custom HTML page</p>
+        </div>
+
+        <div class="content">
+            <div class="form-section">
+                <form id="htmlForm">
+                    <div class="form-group">
+                        <label for="primaryKw">Primary KW</label>
+                        <input type="text" id="primaryKw" name="primaryKw" placeholder="Enter primary keyword">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="locationName">Location Name</label>
+                        <input type="text" id="locationName" name="locationName" placeholder="Enter location name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gbLocationDescription">GB Location Description</label>
+                        <textarea id="gbLocationDescription" name="gbLocationDescription" placeholder="Enter Google Business location description"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="kw2">KW 2</label>
+                        <input type="text" id="kw2" name="kw2" placeholder="Enter keyword 2">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="kw3">KW 3</label>
+                        <input type="text" id="kw3" name="kw3" placeholder="Enter keyword 3">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="kw4">KW 4</label>
+                        <input type="text" id="kw4" name="kw4" placeholder="Enter keyword 4">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="kw5">KW 5</label>
+                        <input type="text" id="kw5" name="kw5" placeholder="Enter keyword 5">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="kw6">KW 6</label>
+                        <input type="text" id="kw6" name="kw6" placeholder="Enter keyword 6">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="kw7">KW 7</label>
+                        <input type="text" id="kw7" name="kw7" placeholder="Enter keyword 7">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="kw8">KW 8</label>
+                        <input type="text" id="kw8" name="kw8" placeholder="Enter keyword 8">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="kw9">KW 9</label>
+                        <input type="text" id="kw9" name="kw9" placeholder="Enter keyword 9">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="moneySiteUrl">Money Site / Location Landing Page URL</label>
+                        <input type="url" id="moneySiteUrl" name="moneySiteUrl" placeholder="https://example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="schema">Schema</label>
+                        <textarea id="schema" name="schema" placeholder="Enter schema markup"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="locationLpUrl">Location LP URL</label>
+                        <input type="url" id="locationLpUrl" name="locationLpUrl" placeholder="https://example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gbCidMapUrl">GB CID Map URL</label>
+                        <input type="url" id="gbCidMapUrl" name="gbCidMapUrl" placeholder="https://www.google.com/maps/?cid=">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pressAdvantageOrgPage">Press Advantage Org Page</label>
+                        <input type="url" id="pressAdvantageOrgPage" name="pressAdvantageOrgPage" placeholder="https://example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gStackSitesUrl">G STACK Sites URL</label>
+                        <input type="url" id="gStackSitesUrl" name="gStackSitesUrl" placeholder="https://example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gbMapEmbedCode">GB Map Embed Code</label>
+                        <div class="field-help">Paste the complete iframe embed code from Google Maps (including &lt;iframe&gt; tags)</div>
+                        <textarea id="gbMapEmbedCode" name="gbMapEmbedCode" placeholder="<iframe src=&quot;...&quot; width=&quot;600&quot; height=&quot;450&quot;...></iframe>"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="citationGsheetEmbed">Citation GSHEET Embed</label>
+                        <div class="field-help">Paste the complete iframe embed code from Google Sheets (including &lt;iframe&gt; tags)</div>
+                        <textarea id="citationGsheetEmbed" name="citationGsheetEmbed" placeholder="<iframe src=&quot;...&quot;...></iframe>"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="schemaMymapEmbed">Schema MyMap Embed</label>
+                        <div class="field-help">Paste the complete iframe embed code for your MyMap (including &lt;iframe&gt; tags)</div>
+                        <textarea id="schemaMymapEmbed" name="schemaMymapEmbed" placeholder="<iframe src=&quot;...&quot;...></iframe>"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="idPageUrl">ID Page URL</label>
+                        <div class="field-help">Enter the full URL to the ID page you want to embed</div>
+                        <input type="url" id="idPageUrl" name="idPageUrl" placeholder="https://example.com">
+                    </div>
+
+                    <div class="section-header">T1 Assets</div>
+                    <div class="section-description">The T1 assets are the top social accounts for the client</div>
+
+                    <div class="form-group">
+                        <label for="t1AssetUrl1">T1 Asset URL 1</label>
+                        <div class="field-help">URL to the client's primary social media account</div>
+                        <input type="url" id="t1AssetUrl1" name="t1AssetUrl1" placeholder="https://example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="t1AssetUrl2">T1 Asset URL 2</label>
+                        <div class="field-help">URL to the client's secondary social media account</div>
+                        <input type="url" id="t1AssetUrl2" name="t1AssetUrl2" placeholder="https://example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="t1AssetUrl3">T1 Asset URL 3</label>
+                        <div class="field-help">URL to the client's third social media account</div>
+                        <input type="url" id="t1AssetUrl3" name="t1AssetUrl3" placeholder="https://example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="t1AssetUrl4">T1 Asset URL 4</label>
+                        <div class="field-help">URL to the client's fourth social media account</div>
+                        <input type="url" id="t1AssetUrl4" name="t1AssetUrl4" placeholder="https://example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="t1AssetUrl5">T1 Asset URL 5</label>
+                        <div class="field-help">URL to the client's fifth social media account</div>
+                        <input type="url" id="t1AssetUrl5" name="t1AssetUrl5" placeholder="https://example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="wikiTopic">Wiki Topic</label>
+                        <div class="field-help">Enter the full URL to the Wikipedia page you want to embed</div>
+                        <input type="url" id="wikiTopic" name="wikiTopic" placeholder="https://en.wikipedia.org/wiki/Topic">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" placeholder="Enter city name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" name="address" placeholder="Enter street address">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <input type="text" id="state" name="state" placeholder="Enter state">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="zip">ZIP</label>
+                        <input type="text" id="zip" name="zip" placeholder="Enter ZIP code">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gbWebsiteUrl">GB Website URL</label>
+                        <input type="url" id="gbWebsiteUrl" name="gbWebsiteUrl" placeholder="https://example.com">
+                    </div>
+
+
+
+                    <button type="button" class="generate-btn" onclick="generateHTML()">Generate HTML</button>
+                </form>
+            </div>
+
+            <div class="preview-section">
+                <div id="previewArea" class="preview-area">
+                    <div class="icon">📄</div>
+                    <h3>HTML Preview</h3>
+                    <p>Fill out the form and click "Generate HTML" to see your page</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateHTML() {
+            const form = document.getElementById('htmlForm');
+            const formData = new FormData(form);
+            
+            // Get the template HTML
+            const template = `<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>[Primary KW] - [Location Name]</title>
+  <meta name="description" content="[GB Location Description]" />
+  <meta name="keywords" content="[Primary KW], [KW 2], [KW 3], [KW 4]" />
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <link rel="canonical" href="[Money Site / Location Landing Page URL]">
+  <style>
+  html
+{ height: 100%;}
+
+*
+{ margin: 0;
+  padding: 0;}
+
+body
+{ font: normal .80em 'trebuchet ms', arial, sans-serif;
+  background: #000000 ;
+  color: #000;}
+
+p
+{ padding: 0 0 20px 0;
+  line-height: 1.7em;}
+
+img
+{ border: 0;}
+
+h1, h2, h3, h4, h5, h6
+{ font: normal 175% 'century gothic', arial, sans-serif;
+  color: #000;
+  margin: 0 0 15px 0;
+  padding: 15px 0 5px 0;}
+
+h2
+{ font: normal 175% 'century gothic', arial, sans-serif;}
+
+h4, h5, h6
+{ margin: 0;
+  padding: 0 0 5px 0;
+  font: normal 120% arial, sans-serif;}
+
+h5, h6
+{ font: italic 95% arial, sans-serif;
+  padding: 0 0 15px 0;}
+
+a, a:hover
+{ outline: none;
+  text-decoration: underline;
+  color: #000;}
+
+a:hover
+{ text-decoration: none;}
+
+.left
+{ float: left;
+  width: auto;
+  margin-right: 10px;}
+
+.right
+{ float: right;
+  width: auto;
+  margin-left: 10px;}
+
+.center
+{ display: block;
+  text-align: center;
+  margin: 20px auto;}
+
+blockquote
+{ margin: 20px 0;
+  padding: 10px 20px 0 20px;
+  border: 1px solid #E5E5DB;
+  background: #FFF;}
+
+ul
+{ margin: 2px 0 22px 17px;}
+
+ul li
+{ list-style-type: circle;
+  margin: 0 0 6px 0;
+  padding: 0 0 4px 5px;}
+
+ol
+{ margin: 8px 0 22px 20px;}
+
+ol li
+{ margin: 0 0 11px 0;}
+
+#main, #logo, #menubar, #site_content, #footer
+{ margin-left: auto;
+  margin-right: auto;}
+
+#header
+{ background: transparent;
+  height: 202px;}
+
+#logo
+{ width: 898px;
+  position: relative;
+  height: 148px;
+  border-bottom: 2px solid #FFF;}
+
+#logo #logo_text
+{ position: absolute;
+  top: 20px;
+  left: 0;}
+
+#logo h1, #logo h2
+{ font: normal 300% 'century gothic', arial, sans-serif;
+  border-bottom: 0;
+  text-transform: none;
+  margin: 0;}
+
+#logo_text h1, #logo_text h1 a, #logo_text h1 a:hover
+{ padding: 22px 0 0 0;
+  color: #FFF;
+  letter-spacing: -1px;
+  text-decoration: none;}
+
+#logo_text h1 a .logo_colour
+{ color: #FFF;}
+
+#logo_text h2
+{ font-size: 100%;
+  padding: 4px 0 0 0;
+  color: #FFF;}
+
+#menubar
+{ width: 898px;
+  height: 52px;
+  padding: 0;
+  background: #000;}
+
+ul#menu, ul#menu li
+{ float: left;
+  margin: 0;
+  padding: 0;}
+
+ul#menu li
+{ list-style: none;}
+
+ul#menu li a
+{ letter-spacing: 0.1em;
+  font: normal 100% arial, sans-serif;
+  display: block;
+  float: left;
+  height: 17px;
+  margin: 10px 0 0 10px;
+  padding: 9px 26px 6px 26px;
+  text-align: center;
+  color: #FFF;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: transparent;}
+
+ul#menu li a:hover, ul#menu li.selected a, ul#menu li.selected a:hover
+{ color: #FFF;
+  background: transparent url(transparent_light.png) repeat;}
+
+#site_content
+{ width: 854px;
+  overflow: hidden;
+  margin: 0 auto 0 auto;
+  padding: 0 24px 20px 20px;
+  background: #FFF;}
+
+.sidebar
+{ float: right;
+  width: 210px;
+  padding: 0 15px 20px 15px;}
+
+.sidebar ul
+{ width: 198px;
+  padding: 4px 0 0 0;
+  margin: 4px 0 30px 0;}
+
+.sidebar li
+{ list-style: none;
+  padding: 0 0 7px 0; }
+
+.sidebar li a, .sidebar li a:hover
+{ padding: 0 0 0 40px;
+  display: block;
+  background: transparent url(link.png) no-repeat left center;}
+
+.sidebar li a.selected
+{ color: #7E2451;
+  text-decoration: none;}
+
+#content
+{ text-align: left;
+  float: left;
+  width: 595px;
+  padding: 0;}
+
+#content ul
+{ margin: 2px 0 22px 0px;}
+
+#content ul li
+{ list-style-type: none;
+  background: url(bullet.png) no-repeat;
+  margin: 0 0 6px 0;
+  padding: 0 0 4px 25px;
+  line-height: 1.5em;}
+
+#footer
+{ width: 898px;
+  font: normal 100% 'lucida sans unicode', arial, sans-serif;
+  height: 33px;
+  padding: 24px 0 5px 0;
+  text-align: center;
+  background: transparent;
+  color: #FFF;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;}
+
+#footer a
+{ color: #FFF;
+  text-decoration: none;}
+
+#footer a:hover
+{ color: #FFF;
+  text-decoration: underline;}
+
+.separator
+{ width: 100%;
+  height: 0;
+  border-top: 1px solid #D9D5CF;
+  border-bottom: 1px solid #FFF;
+  margin: 0 0 20px 0;}
+
+table
+{ margin: 10px 0 30px 0;}
+
+table tr th, table tr td
+{ background: #3B3B3B;
+  color: #FFF;
+  padding: 7px 4px;
+  text-align: left;}
+
+table tr td
+{ background: #F0EFE2;
+  color: #47433F;
+  border-top: 1px solid #FFF;}
+  </style>
+[Schema]
+</head>
+
+<body>
+  <div id="main">
+    <div id="header">
+      <div id="logo">
+        <div id="logo_text">
+          <!-- class="logo_color", allows you to change the color of the text -->
+          <h1>[Primary KW]</h1>
+
+        </div>
+      </div>
+      <div id="menubar">
+        <ul id="menu">
+          <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
+          
+<li><a href="[Location LP URL]">[Primary KW]</a></li>
+<!-- 
+
+Locate the Google Business Profile in the native Google Maps interface and click the listing to select it.
+Replace http:// with view-source: in the address bar, and hit "enter".
+Using your keyboard, press CTRL+F and search the source code for the phrase "ludocid".
+The CID will be the string of numbers located after â€œludocid\\u003dâ€ and before #lrd.
+https://www.google.com/maps/?cid=
+-->
+<li><a href="[GB CID Map URL]">[KW 2]</a></li>
+<li><a href="[Press Advantage Org Page]">[KW 3]</a></li>
+<li><a href="[G STACK Sites URL]">[KW 4]</a></li>
+        </ul>
+      </div>
+    </div>
+    <div id="site_content">
+      <div class="sidebar">
+        <!-- insert your sidebar items here -->
+        <h4>Useful Links</h4>
+        <ul>     
+<li><a href="[T1 Asset URL 1]">[KW 5]</a></li>
+<li><a href="[T1 Asset URL 2]">[KW 6]</a></li>
+<li><a href="[T1 Asset URL 3]">[KW 7]</a></li>
+<li><a href="[T1 Asset URL 4]">[KW 8]</a></li>
+<li><a href="[T1 Asset URL 5]">[KW 9]</a></li>
+        </ul>
+      </div>
+      <div id="content">
+        <!-- insert the page content here -->
+        
+<h2 id="item1" itemprop="headline">[KW 2] - [Phone]</h2>
+
+<p><iframe src="[Wiki Topic]" style="border:0px #ffffff none;" scrolling="yes" frameborder="0" marginheight="0px" marginwidth="0px" height="800px" width="600px" allowfullscreen></iframe></p>
+
+<p>Learn more about our [Primary KW] In [City].</p>
+
+<p>[Location Name]<br>
+[Address]<br>
+[City], [State] [ZIP]<br>
+[Phone]<br>
+<a href="[GB Website URL]">[GB Website URL]</a></p>
+
+<p>[GB Map Embed Code]</p>
+
+<h3>[KW 2]</h3>
+
+<p><iframe src="[Press Advantage Org Page]" style="border:0px #ffffff none;" scrolling="yes" frameborder="0" marginheight="0px" marginwidth="0px" height="800px" width="600px" allowfullscreen></iframe></p>
+
+<h3>[KW 3]</h3>
+
+<p>[Citation GSHEET Embed]</p>
+
+<h3>[KW 4]</h3>
+
+<p>[Schema MyMap Embed]</p>
+
+<h3>[KW 5]</h3>
+
+<p><iframe src="[ID Page URL]" style="border:0px #ffffff none;" scrolling="yes" frameborder="0" marginheight="0px" marginwidth="0px" height="800px" width="600px" allowfullscreen></iframe></p>
+
+      </div>
+    </div>
+    <div id="footer">
+       <p>Copyright &copy; [Location Name]</p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+            // Create mapping of form fields to placeholders
+            const fieldMapping = {
+                'primaryKw': 'Primary KW',
+                'locationName': 'Location Name',
+                'gbLocationDescription': 'GB Location Description',
+                'kw2': 'KW 2',
+                'kw3': 'KW 3',
+                'kw4': 'KW 4',
+                'kw5': 'KW 5',
+                'kw6': 'KW 6',
+                'kw7': 'KW 7',
+                'kw8': 'KW 8',
+                'kw9': 'KW 9',
+                'moneySiteUrl': 'Money Site / Location Landing Page URL',
+                'schema': 'Schema',
+                'locationLpUrl': 'Location LP URL',
+                'gbCidMapUrl': 'GB CID Map URL',
+                'pressAdvantageOrgPage': 'Press Advantage Org Page',
+                'gStackSitesUrl': 'G STACK Sites URL',
+                't1AssetUrl1': 'T1 Asset URL 1',
+                't1AssetUrl2': 'T1 Asset URL 2',
+                't1AssetUrl3': 'T1 Asset URL 3',
+                't1AssetUrl4': 'T1 Asset URL 4',
+                't1AssetUrl5': 'T1 Asset URL 5',
+                'phone': 'Phone',
+                'wikiTopic': 'Wiki Topic',
+                'city': 'City',
+                'address': 'Address',
+                'state': 'State',
+                'zip': 'ZIP',
+                'gbWebsiteUrl': 'GB Website URL',
+                'gbMapEmbedCode': 'GB Map Embed Code',
+                'citationGsheetEmbed': 'Citation GSHEET Embed',
+                'schemaMymapEmbed': 'Schema MyMap Embed',
+                'idPageUrl': 'ID Page URL'
+            };
+
+            // Replace placeholders with form data
+            let generatedHTML = template;
+            
+            for (const [fieldName, placeholder] of Object.entries(fieldMapping)) {
+                const value = formData.get(fieldName) || '';
+                const regex = new RegExp(`\\[${placeholder}\\]`, 'g');
+                generatedHTML = generatedHTML.replace(regex, value);
+            }
+
+            // Update preview area
+            const previewArea = document.getElementById('previewArea');
+            previewArea.className = 'preview-area has-content';
+            previewArea.innerHTML = `
+                <h3>Generated HTML</h3>
+                <div class="preview-content">
+                    <pre>${escapeHtml(generatedHTML)}</pre>
+                </div>
+                <button class="download-btn" onclick="downloadHTML()">Download HTML File</button>
+            `;
+
+            // Store generated HTML for download
+            window.generatedHTML = generatedHTML;
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function downloadHTML() {
+            if (!window.generatedHTML) {
+                alert('Please generate HTML first');
+                return;
+            }
+
+            const blob = new Blob([window.generatedHTML], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'generated-page.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
