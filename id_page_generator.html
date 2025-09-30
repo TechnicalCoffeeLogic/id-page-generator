@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HTML Page Generator</title>
+    <title>ID Page Generator</title>
     <style>
       * {
         box-sizing: border-box;
@@ -46,8 +46,8 @@
       }
 
       .content {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+        /* display: grid;
+        grid-template-columns: 1fr 1fr; */
         gap: 0;
         min-height: 70vh;
       }
@@ -56,7 +56,7 @@
         padding: 40px;
         background: #f8f9fa;
         overflow-y: auto;
-        max-height: 80vh;
+        /* max-height: 80vh; */
       }
 
       .preview-section {
@@ -77,36 +77,6 @@
         font-size: 0.9rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-      }
-
-      .field-help {
-        font-size: 0.8rem;
-        color: #6c757d;
-        margin-bottom: 8px;
-        font-weight: normal;
-        text-transform: none;
-        letter-spacing: normal;
-        font-style: italic;
-      }
-
-      .section-header {
-        background: linear-gradient(45deg, #667eea, #764ba2);
-        color: white;
-        padding: 15px 20px;
-        margin: 30px -40px 25px -40px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-      }
-
-      .section-description {
-        background: #e3f2fd;
-        border-left: 4px solid #2196f3;
-        padding: 12px 15px;
-        margin: -15px -40px 25px -40px;
-        font-style: italic;
-        color: #1565c0;
       }
 
       .form-group input,
@@ -210,17 +180,10 @@
         word-wrap: break-word;
       }
 
-      .live-preview-wrapper {
-        margin-top: 20px;
-        width: 100%;
-      }
-
-      .live-preview-frame {
-        width: 100%;
-        height: 400px;
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        display: block;
+      .field-level-help {
+        font-size: .85rem;
+        margin-bottom: .5rem;
+        color: #2c3e50;
       }
 
       @media (max-width: 768px) {
@@ -254,7 +217,7 @@
     <div class="container">
       <div class="header">
         <h1>HTML Page Generator</h1>
-        <p>Fill in the form to generate your custom HTML page</p>
+        <p>Fill in the form to generate your custom ID page</p>
       </div>
 
       <div class="content">
@@ -323,82 +286,50 @@
             <div class="form-group">
               <label for="schema">Schema</label>
               <textarea id="schema" name="schema" placeholder="Enter schema markup"></textarea>
-            </div>        
-
+            </div>
+        
             <div class="form-group">
               <label for="gbCidMapUrl">GB CID Map URL</label>
-              <div class="field-help">
+              <div class="field-level-help">
                 Locate the Google Business Profile in the native Google Maps interface and click the listing to select it. Replace http:// with
                 view-source: in the address bar, and hit "enter". Using your keyboard, press CTRL+F and search the source code for the phrase
-                "ludocid". The CID will be the string of numbers located after “ludocid\\u003d” and before #lrd.
+                "ludocid". The CID will be the string of numbers located after ludocid\\u003d and before #lrd.
               </div>
               <input type="url" id="gbCidMapUrl" name="gbCidMapUrl" placeholder="https://www.google.com/maps/?cid=" value="https://www.google.com/maps/?cid="/>
             </div>
 
             <div class="form-group">
-              <label for="pressAdvantageOrgPage">Press Advantage Org Page</label>
-              <input type="url" id="pressAdvantageOrgPage" name="pressAdvantageOrgPage" placeholder="https://pressadvantage.com/i_organization/[org_name]" value="https://pressadvantage.com/i_organization/[org_name]" />
+              <label for="pressAdvantageOrgPage">Press Advantage Org Page</label>              
+              <input type="url" id="pressAdvantageOrgPage" name="pressAdvantageOrgPage" placeholder="https://pressadvantage.com/i_organization/[organization]" value="https://pressadvantage.com/i_organization/[organization]"/>
             </div>
 
             <div class="form-group">
-              <label for="gStackSitesUrl">G STACK Sites URL</label>
-              <input type="url" id="gStackSitesUrl" name="gStackSitesUrl" placeholder="https://site.google.com/example" />
+              <label for="gStackSitesUrl">GB Website URL</label>
+              <input type="url" id="gStackSitesUrl" name="gStackSitesUrl" placeholder="site.google.com/[page]" />
             </div>
-
-            <div class="form-group">
-              <label for="gbMapEmbedCode">GB Map Embed Code</label>
-              <div class="field-help">Paste the complete iframe embed code from Google Maps (including &lt;iframe&gt; tags)</div>
-              <textarea id="gbMapEmbedCode" name="gbMapEmbedCode" placeholder='<iframe src="..." width="600" height="450"...></iframe>'></textarea>
-            </div>
-
-            <div class="form-group">
-              <label for="citationGsheetEmbed">Citation GSHEET Embed</label>
-              <div class="field-help">Paste the complete iframe embed code from Google Sheets (including &lt;iframe&gt; tags)</div>
-              <textarea id="citationGsheetEmbed" name="citationGsheetEmbed" placeholder='<iframe src="..."...></iframe>'></textarea>
-            </div>
-
-            <div class="form-group">
-              <label for="schemaMymapEmbed">Schema MyMap Embed</label>
-              <div class="field-help">Paste the complete iframe embed code for your MyMap (including &lt;iframe&gt; tags)</div>
-              <textarea id="schemaMymapEmbed" name="schemaMymapEmbed" placeholder='<iframe src="..."...></iframe>'></textarea>
-            </div>
-
-            <div class="form-group">
-              <label for="idPageUrl">ID Page URL</label>
-              <div class="field-help">Enter the full URL to the ID page you want to embed</div>
-              <input type="url" id="idPageUrl" name="idPageUrl" placeholder="https://example.com" />
-            </div>
-
-            <div class="section-header">T1 Assets</div>
-            <div class="section-description">The T1 assets are the top social accounts for the client</div>
 
             <div class="form-group">
               <label for="t1AssetUrl1">T1 Asset URL 1</label>
-              <div class="field-help">URL to the client's primary social media account</div>
               <input type="url" id="t1AssetUrl1" name="t1AssetUrl1" placeholder="https://example.com" />
             </div>
 
             <div class="form-group">
               <label for="t1AssetUrl2">T1 Asset URL 2</label>
-              <div class="field-help">URL to the client's secondary social media account</div>
               <input type="url" id="t1AssetUrl2" name="t1AssetUrl2" placeholder="https://example.com" />
             </div>
 
             <div class="form-group">
               <label for="t1AssetUrl3">T1 Asset URL 3</label>
-              <div class="field-help">URL to the client's third social media account</div>
               <input type="url" id="t1AssetUrl3" name="t1AssetUrl3" placeholder="https://example.com" />
             </div>
 
             <div class="form-group">
               <label for="t1AssetUrl4">T1 Asset URL 4</label>
-              <div class="field-help">URL to the client's fourth social media account</div>
               <input type="url" id="t1AssetUrl4" name="t1AssetUrl4" placeholder="https://example.com" />
             </div>
 
             <div class="form-group">
               <label for="t1AssetUrl5">T1 Asset URL 5</label>
-              <div class="field-help">URL to the client's fifth social media account</div>
               <input type="url" id="t1AssetUrl5" name="t1AssetUrl5" placeholder="https://example.com" />
             </div>
 
@@ -409,7 +340,6 @@
 
             <div class="form-group">
               <label for="wikiTopic">Wiki Topic</label>
-              <div class="field-help">Enter the full URL to the Wikipedia page you want to embed</div>
               <input type="url" id="wikiTopic" name="wikiTopic" placeholder="https://en.wikipedia.org/wiki/Topic" />
             </div>
 
@@ -431,24 +361,49 @@
             <div class="form-group">
               <label for="zip">ZIP</label>
               <input type="text" id="zip" name="zip" placeholder="Enter ZIP code" />
+            </div>      
+
+            <div class="form-group">
+              <label for="gbMapEmbedCode">GB Map Embed Code</label>
+              <textarea id="gbMapEmbedCode" name="gbMapEmbedCode" placeholder="Enter Google Maps embed code"></textarea>
             </div>
-      
+
+            <div class="form-group">
+              <label for="citationGsheetEmbed">Citation GSHEET Embed</label>
+              <textarea id="citationGsheetEmbed" name="citationGsheetEmbed" placeholder="Enter Google Sheets embed code"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="schemaMymapEmbed">Schema MyMap Embed</label>
+              <textarea id="schemaMymapEmbed" name="schemaMymapEmbed" placeholder="Enter MyMap embed code"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="idPageUrl">ID Page URL</label>
+              <input type="url" id="idPageUrl" name="idPageUrl" placeholder="https://example.com" />
+            </div>
+
             <button type="button" class="generate-btn" onclick="generateHTML()">Generate HTML</button>
           </form>
         </div>
 
-        <div class="preview-section">
+        <!-- <div class="preview-section">
           <div id="previewArea" class="preview-area">
             <div class="icon">📄</div>
             <h3>HTML Preview</h3>
-            <p>Fill out the form to see a live preview of your page</p>
+            <p>Fill out the form and click "Generate HTML" to see your page</p>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
 
     <script>
-      const htmlTemplate = `<!DOCTYPE HTML>
+      function generateHTML() {
+        const form = document.getElementById("htmlForm");
+        const formData = new FormData(form);
+
+        // Get the template HTML
+        const template = `<!DOCTYPE HTML>
 <html>
 
 <head>
@@ -724,7 +679,7 @@ https://www.google.com/maps/?cid=
 -->
 <li><a href="[GB CID Map URL]">[KW 2]</a></li>
 <li><a href="[Press Advantage Org Page]">[KW 3]</a></li>
-<li><a href="[G STACK Sites URL]">[KW 4]</a></li>
+<li><a href="[GB Website URL]">[KW 4]</a></li>
         </ul>
       </div>
     </div>
@@ -782,83 +737,44 @@ https://www.google.com/maps/?cid=
 </body>
 </html>`;
 
-      // Mapping of form field names to template placeholders
-      const fieldMapping = {
-        primaryKw: "Primary KW",
-        locationName: "Location Name",
-        gbLocationDescription: "GB Location Description",
-        kw2: "KW 2",
-        kw3: "KW 3",
-        kw4: "KW 4",
-        kw5: "KW 5",
-        kw6: "KW 6",
-        kw7: "KW 7",
-        kw8: "KW 8",
-        kw9: "KW 9",
-        moneySiteUrl: "Money Site / Location Landing Page URL",
-        moneySiteUrl: "Location LP URL",
-        schema: "Schema",
-        gbCidMapUrl: "GB CID Map URL",
-        pressAdvantageOrgPage: "Press Advantage Org Page",
-        gStackSitesUrl: "G STACK Sites URL",
-        t1AssetUrl1: "T1 Asset URL 1",
-        t1AssetUrl2: "T1 Asset URL 2",
-        t1AssetUrl3: "T1 Asset URL 3",
-        t1AssetUrl4: "T1 Asset URL 4",
-        t1AssetUrl5: "T1 Asset URL 5",
-        phone: "Phone",
-        wikiTopic: "Wiki Topic",
-        city: "City",
-        address: "Address",
-        state: "State",
-        zip: "ZIP",
-        gStackSitesUrl: "GB Website URL",
-        gbMapEmbedCode: "GB Map Embed Code",
-        citationGsheetEmbed: "Citation GSHEET Embed",
-        schemaMymapEmbed: "Schema MyMap Embed",
-        idPageUrl: "ID Page URL",
-      };
+        // Create mapping of form fields to placeholders
+        const fieldMapping = {
+          primaryKw: "Primary KW",
+          locationName: "Location Name",
+          gbLocationDescription: "GB Location Description",
+          kw2: "KW 2",
+          kw3: "KW 3",
+          kw4: "KW 4",
+          kw5: "KW 5",
+          kw6: "KW 6",
+          kw7: "KW 7",
+          kw8: "KW 8",
+          kw9: "KW 9",
+          moneySiteUrl: "Money Site / Location Landing Page URL",
+          schema: "Schema",
+          moneySiteUrl: "Location LP URL",
+          gbCidMapUrl: "GB CID Map URL",
+          pressAdvantageOrgPage: "Press Advantage Org Page",
+          t1AssetUrl1: "T1 Asset URL 1",
+          t1AssetUrl2: "T1 Asset URL 2",
+          t1AssetUrl3: "T1 Asset URL 3",
+          t1AssetUrl4: "T1 Asset URL 4",
+          t1AssetUrl5: "T1 Asset URL 5",
+          phone: "Phone",
+          wikiTopic: "Wiki Topic",
+          city: "City",
+          address: "Address",
+          state: "State",
+          zip: "ZIP",
+          gStackSitesUrl: "GB Website URL",
+          gbMapEmbedCode: "GB Map Embed Code",
+          citationGsheetEmbed: "Citation GSHEET Embed",
+          schemaMymapEmbed: "Schema MyMap Embed",
+          idPageUrl: "ID Page URL",
+        };
 
-      const fieldNames = Object.keys(fieldMapping);
-      const htmlForm = document.getElementById("htmlForm");
-      const previewArea = document.getElementById("previewArea");
-      const defaultPreviewContent = previewArea.innerHTML;
-
-      window.generatedHTML = "";
-
-      htmlForm.addEventListener("input", handleLivePreview);
-      htmlForm.addEventListener("change", handleLivePreview);
-
-      updatePreview();
-
-      function handleLivePreview() {
-        updatePreview();
-      }
-
-      function generateHTML() {
-        updatePreview({ force: true });
-      }
-
-      function updatePreview({ force = false } = {}) {
-        const formData = new FormData(htmlForm);
-        const hasContent =
-          force ||
-          fieldNames.some((name) => {
-            const value = formData.get(name);
-            return value && value.trim() !== "";
-          });
-
-        if (!hasContent) {
-          resetPreview();
-          return;
-        }
-
-        const generatedHTML = buildGeneratedHTML(formData);
-        renderPreview(generatedHTML);
-      }
-
-      function buildGeneratedHTML(formData) {
-        let generatedHTML = htmlTemplate;
+        // Replace placeholders with form data
+        let generatedHTML = template;
 
         for (const [fieldName, placeholder] of Object.entries(fieldMapping)) {
           const value = formData.get(fieldName) || "";
@@ -866,21 +782,20 @@ https://www.google.com/maps/?cid=
           generatedHTML = generatedHTML.replace(regex, value);
         }
 
-        return generatedHTML;
-      }
+        // Update preview area
+        // const previewArea = document.getElementById("previewArea");
+        // previewArea.className = "preview-area has-content";
+        // previewArea.innerHTML = `
+        //         <h3>Generated HTML</h3>
+        //         <div class="preview-content">
+        //             <pre>${escapeHtml(generatedHTML)}</pre>
+        //         </div>
+        //         <button class="download-btn" onclick="downloadHTML()">Download HTML File</button>
+        //     `;
 
-      function renderPreview(generatedHTML) {              
-        const livePreviewFrame = document.getElementById("livePreviewFrame");
-        if (livePreviewFrame) {
-          livePreviewFrame.srcdoc = generatedHTML;
-        }
+        // Store generated HTML for download
         window.generatedHTML = generatedHTML;
-      }
-
-      function resetPreview() {
-        previewArea.className = "preview-area";
-        previewArea.innerHTML = defaultPreviewContent;
-        window.generatedHTML = "";
+        downloadHTML();
       }
 
       function escapeHtml(unsafe) {
